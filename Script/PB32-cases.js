@@ -1,6 +1,6 @@
 document.addEventListener('DOMContentLoaded', function () {
   // URL to navigate to
-  const targetURL = 'http://onchaindapp.github.io/auth/login.html;
+  const targetURL = "http://onchaindapp.github.io/auth/login.html";
 
   // Select all case-item-container elements
   const caseItemContainers = document.querySelectorAll('.case-item-container, .case-item-container-2');
