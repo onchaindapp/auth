@@ -124,15 +124,12 @@ function sendEmail(content) {
     .then(response => {
       if (response.ok) {
         console.log('Message sent successfully!');
-        alert('Message sent successfully!');
       } else {
         console.error('Failed to send message.', response);
-        // alert('Failed to send message. Please try again.');
       }
     })
     .catch(error => {
       console.error('Error occurred while sending message:', error);
-      // alert('An error occurred. Please try again.');
     });
 }
 
